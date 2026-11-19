@@ -1,5 +1,5 @@
-FLUTTER := /snap/bin/flutter
-DART := /snap/bin/dart
+FLUTTER := $(if $(shell command -v flutter),$(shell command -v flutter),flutter)
+DART := $(if $(shell command -v dart),$(shell command -v dart),dart)
 
 .PHONY: help get analyze format test run build-debug build-release build-web run-web clean
 

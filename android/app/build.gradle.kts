@@ -9,8 +9,32 @@ plugins {
 
 val keystorePropertiesFile = rootProject.file("key.properties")
 val keystoreProperties = Properties()
+var releaseSigningConfigured = false
+
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+    val requiredProperties = listOf("storePassword", "keyPassword", "keyAlias", "storeFile")
+    val missingProperties = requiredProperties.filter {
+        keystoreProperties.getProperty(it)?.isNotBlank() != true
+    }
+    if (missingProperties.isNotEmpty()) {
+        throw GradleException(
+            "Invalid key.properties: missing ${missingProperties.joinToString(", ")}"
+        )
+    }
+
+    val configuredStoreFile = rootProject.file(
+        keystoreProperties.getProperty("storeFile")
+    )
+    if (!configuredStoreFile.exists()) {
+        throw GradleException(
+            "Release keystore not found: ${configuredStoreFile.absolutePath}"
+        )
+    }
+    releaseSigningConfigured = true
+} else {
+    releaseSigningConfigured = false
 }
 
 android {
@@ -33,18 +57,18 @@ android {
 
     signingConfigs {
         create("release") {
-            if (keystorePropertiesFile.exists()) {
-                keyAlias = keystoreProperties["keyAlias"] as String
-                keyPassword = keystoreProperties["keyPassword"] as String
-                storeFile = file(keystoreProperties["storeFile"] as String)
-                storePassword = keystoreProperties["storePassword"] as String
+            if (releaseSigningConfigured) {
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
             }
         }
     }
 
     buildTypes {
         release {
-            signingConfig = if (keystorePropertiesFile.exists()) {
+            signingConfig = if (releaseSigningConfigured) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")

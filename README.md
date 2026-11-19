@@ -103,8 +103,9 @@ flutter run
 
 To sign builds with your production key:
 1. Duplicate `android/key.properties.example` to `android/key.properties`.
-2. Fill in your keystore path, alias, and passwords.
-3. Run `flutter build appbundle --release`.
+2. Put `finbalance.keystore` in `android/`, or set `storeFile` to its location.
+3. Fill in the keystore alias and passwords in `key.properties`.
+4. Run `flutter build appbundle --release`.
 
 *See [docs/android-release.md](docs/android-release.md) for full instructions.*
 

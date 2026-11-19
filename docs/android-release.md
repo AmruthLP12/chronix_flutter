@@ -34,13 +34,17 @@ keytool -genkey -v -keystore ~/chronix-upload-keystore.jks \
    ```bash
    cp android/key.properties.example android/key.properties
    ```
-2. Populate the properties:
+2. Put `finbalance.keystore` in `android/` and populate the properties:
    ```properties
    storePassword=YOUR_ACTUAL_STORE_PASSWORD
    keyPassword=YOUR_ACTUAL_KEY_PASSWORD
-   keyAlias=chronix_release_key
-   storeFile=/home/username/chronix-upload-keystore.jks
+   keyAlias=finbalance
+   storeFile=finbalance.keystore
    ```
+   
+   `storeFile` may be relative to `android/` or absolute. Relative paths make the
+   project easier to move to another system. You can keep the keystore with the
+   checkout or in a shared encrypted location outside the repository.
 > [!CAUTION]
 > Never commit `key.properties` or `*.jks` / `*.keystore` files to version control. Both are strictly blocked by `.gitignore`.
 
