@@ -1,0 +1,8 @@
+# Keystore configuration example for Chronix release signing.
+# Duplicate this file as 'key.properties' in the 'android/' directory and update with your keystore credentials.
+# NEVER commit 'key.properties' or your keystore (*.jks / *.keystore) into Git!
+
+storePassword=YOUR_KEYSTORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=chronix_release_key
+storeFile=/path/to/your/upload-keystore.jks
